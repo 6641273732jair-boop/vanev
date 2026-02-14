@@ -223,6 +223,7 @@ body::before{
     width: 60%;
 }
 
+/* MEDIA QUERIES PARA MÓVIL */
 @media screen and (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -302,16 +303,48 @@ body::before{
         font-size: 14px;
     }
 }
+
+/* Botón de play flotante */
+.play-button {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #bb00ff;
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 0 50px #e066ff;
+    animation: pulse 2s infinite;
+    border: 2px solid white;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.play-button.hidden {
+    display: none;
+}
 </style>
 </head>
 
 <body>
 
-<audio id="audio" autoplay>
+<audio id="audio" loop>
 <source src="cancion.mp3" type="audio/mpeg">
 </audio>
 
 <div class="stars"></div>
+
+<button class="play-button" id="playButton">▶ TOCA PARA REPRODUCIR</button>
 
 <div class="container">
 
@@ -346,28 +379,60 @@ const progress = document.getElementById("progress");
 const progressContainer = document.getElementById("progress-container");
 const current = document.getElementById("current");
 const duration = document.getElementById("duration");
+const playButton = document.getElementById("playButton");
+
+function formatTime(time) {
+    if (isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+}
 
 audio.addEventListener("loadedmetadata", () => {
     duration.textContent = formatTime(audio.duration);
 });
 
 audio.addEventListener("timeupdate", () => {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progress.style.width = percent + "%";
-    current.textContent = formatTime(audio.currentTime);
+    if (!isNaN(audio.duration)) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + "%";
+        current.textContent = formatTime(audio.currentTime);
+    }
 });
 
 progressContainer.addEventListener("click", (e) => {
     const width = progressContainer.clientWidth;
     const clickX = e.offsetX;
-    audio.currentTime = (clickX / width) * audio.duration;
+    if (!isNaN(audio.duration)) {
+        audio.currentTime = (clickX / width) * audio.duration;
+    }
 });
 
-function formatTime(time) {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
-}
+playButton.addEventListener("click", function() {
+    audio.play()
+        .then(() => {
+            playButton.classList.add("hidden");
+            
+            audio.volume = 1;
+        })
+        .catch(error => {
+            console.log("Error al reproducir:", error);
+            alert("Por favor, toca la pantalla de nuevo para reproducir");
+        });
+});
+
+audio.load();
+
+document.body.addEventListener("touchstart", function initTouch() {
+    audio.load();
+    document.body.removeEventListener("touchstart", initTouch);
+});
+
+audio.addEventListener("ended", function() {
+    playButton.classList.remove("hidden");
+    progress.style.width = "0%";
+    current.textContent = "0:00";
+});
 </script>
 
 </body>
