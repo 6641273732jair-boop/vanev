@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FinalV</title>
 
 <style>
@@ -223,6 +223,86 @@ body::before{
     width: 60%;
 }
 
+/* MEDIA QUERIES PARA MÓVIL */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+        min-height: 90vh;
+    }
+
+    .cover::after {
+        width: 280px;
+        height: 280px;
+    }
+
+    .flip-box {
+        width: 280px;
+        height: 390px;
+    }
+
+    .flip-box img {
+        width: 260px;
+        height: 370px;
+    }
+
+    .info {
+        max-width: 280px;
+        text-align: center;
+    }
+
+    .info h1 {
+        font-size: 24px;
+    }
+
+    .info p {
+        font-size: 16px;
+    }
+
+    .info::before {
+        width: 250px;
+        height: 150px;
+    }
+
+    .progress-container {
+        width: 85%;
+    }
+
+    .time {
+        width: 85%;
+    }
+
+    .player {
+        padding: 15px;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media screen and (max-width: 380px) {
+    .cover::after {
+        width: 240px;
+        height: 240px;
+    }
+
+    .flip-box {
+        width: 240px;
+        height: 335px;
+    }
+
+    .flip-box img {
+        width: 220px;
+        height: 315px;
+    }
+
+    .info h1 {
+        font-size: 20px;
+    }
+
+    .info p {
+        font-size: 14px;
+    }
+}
 </style>
 </head>
 
