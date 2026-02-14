@@ -271,14 +271,29 @@ body::before{
 
     .time {
         width: 85%;
+        font-size: 12px;
     }
 
     .player {
-        padding: 15px;
+        padding: 12px;
+    }
+    
+    /* Botón más pequeño para móvil */
+    .play-button {
+        padding: 15px 30px;
+        font-size: 20px;
     }
 }
 
 /* Para pantallas muy pequeñas */
+@media screen and (max-width: 480px) {
+    .play-button {
+        padding: 12px 24px;
+        font-size: 18px;
+        border-radius: 40px;
+    }
+}
+
 @media screen and (max-width: 380px) {
     .cover::after {
         width: 240px;
@@ -302,9 +317,15 @@ body::before{
     .info p {
         font-size: 14px;
     }
+    
+    /* Botón aún más pequeño para pantallas muy pequeñas */
+    .play-button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
 }
 
-/* Botón de play flotante */
+/* Botón de play flotante (tamaño escritorio) */
 .play-button {
     position: fixed;
     top: 50%;
@@ -322,6 +343,7 @@ body::before{
     box-shadow: 0 0 50px #e066ff;
     animation: pulse 2s infinite;
     border: 2px solid white;
+    white-space: nowrap; /* Evita que el texto se rompa */
 }
 
 @keyframes pulse {
@@ -412,12 +434,11 @@ playButton.addEventListener("click", function() {
     audio.play()
         .then(() => {
             playButton.classList.add("hidden");
-            
             audio.volume = 1;
         })
         .catch(error => {
             console.log("Error al reproducir:", error);
-            alert("Por favor, toca la pantalla de nuevo para reproducir");
+            alert("Por favor, toca el botón nuevamente para reproducir");
         });
 });
 
