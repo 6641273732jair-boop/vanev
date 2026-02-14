@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinalV</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, #14001f, #3b0066, #14001f);
+    color: white;
+    overflow: hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background: radial-gradient(circle at 30% 40%, #bb00ff22, transparent 50%),
+                radial-gradient(circle at 70% 70%, #e066ff22, transparent 50%);
+    z-index:0;
+}
+
+.stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.stars::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    box-shadow:
+    50px 100px white,
+    200px 300px white,
+    400px 150px white,
+    600px 250px white,
+    800px 100px white,
+    1000px 350px white,
+    300px 600px white,
+    700px 500px white,
+    900px 200px white,
+    1100px 400px white,
+    1300px 150px white,
+    150px 450px white,
+    500px 700px white,
+    900px 650px white;
+    animation: moveStars 50s linear infinite;
+}
+
+@keyframes moveStars {
+    from { transform: translateY(0); }
+    to { transform: translateY(-800px); }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 30px;
+    gap: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.cover {
+    display: flex;
+    align-items: center;
+    position: relative;
+    perspective: 1200px;
+}
+
+.cover::after{
+    content:"";
+    position:absolute;
+    width:340px;
+    height:340px;
+    border-radius:25px;
+    border:2px solid transparent;
+    background: linear-gradient(45deg,#bb00ff,#e066ff,#ffffff,#bb00ff) border-box;
+    mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: rotateBorder 8s linear infinite;
+    filter: blur(1px);
+}
+
+@keyframes rotateBorder{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+.flip-box {
+    width: 340px;
+    height: 470px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+}
+
+.cover:hover .flip-box {
+    transform: rotateY(180deg);
+}
+
+.flip-box img {
+    width: 320px;
+    height: 450px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px #bb00ff;
+    position: absolute;
+    backface-visibility: hidden;
+    object-fit: cover;
+    transition: 0.4s;
+}
+
+.flip-box img:hover {
+    box-shadow: 0 0 60px #e066ff;
+}
+
+.flip-box .back {
+    transform: rotateY(180deg);
+}
+
+.info {
+    max-width: 320px;
+    position:relative;
+}
+
+.info::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:200px;
+    background: radial-gradient(circle, #bb00ff22, transparent 70%);
+    z-index:-1;
+}
+
+.info h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 12px #e066ff;
+}
+
+.info p {
+    color: #d9b3ff;
+    line-height: 1.5;
+}
+
+.player {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(30, 0, 50, 0.97);
+    padding: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 -10px 40px #bb00ff70;
+    border-top: 1px solid #e066ff40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.player::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:2px;
+    background: linear-gradient(90deg,#bb00ff,#e066ff,#ffffff,#bb00ff);
+    background-size:200%;
+    animation: moveLine 6s linear infinite;
+}
+
+@keyframes moveLine{
+    0%{background-position:0%;}
+    100%{background-position:200%;}
+}
+
+.progress-container {
+    width: 60%;
+    height: 8px;
+    background: #4d007a;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow:hidden;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #bb00ff, #e066ff, #ffffff);
+    border-radius: 20px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 15px #e066ff;
+}
+
+.progress::after{
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    width:20px;
+    height:100%;
+    background:rgba(255,255,255,0.5);
+    filter:blur(5px);
+}
+
+.time {
+    font-size: 13px;
+    color: #d9b3ff;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="audio" autoplay>
+<source src="cancion.mp3" type="audio/mpeg">
+</audio>
+
+<div class="stars"></div>
+
+<div class="container">
+
+<div class="cover">
+    <div class="flip-box">
+        <img src="images/portada.png" class="front" alt="Portada">
+        <img src="images/portada2.png" class="back" alt="Portada 2">
+    </div>
+</div>
+
+<div class="info">
+    <h1>Your eyes shine like stars in the sky ✦</h1>
+    <p>You are a very pretty girl. ✦</p>
+</div>
+
+</div>
+
+<div class="player">
+    <div class="progress-container" id="progress-container">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="time">
+        <span id="current">0:00</span>
+        <span id="duration">0:00</span>
+    </div>
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const progress = document.getElementById("progress");
+const progressContainer = document.getElementById("progress-container");
+const current = document.getElementById("current");
+const duration = document.getElementById("duration");
+
+audio.addEventListener("loadedmetadata", () => {
+    duration.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("timeupdate", () => {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progress.style.width = percent + "%";
+    current.textContent = formatTime(audio.currentTime);
+});
+
+progressContainer.addEventListener("click", (e) => {
+    const width = progressContainer.clientWidth;
+    const clickX = e.offsetX;
+    audio.currentTime = (clickX / width) * audio.duration;
+});
+
+function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+}
+</script>
+
+</body>
+</html>
